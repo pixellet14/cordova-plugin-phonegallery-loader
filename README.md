@@ -8,10 +8,11 @@ document.addEventListener('deviceready', function() {
     }, function(error) {
         // Handle error
     });
-
     // Attach a click event to each album item. When an album is clicked,
+
+    
     // load the pictures in the album
-    $(document).on('click', '.album-item', function() {
+$(document).on('click', '.album-item', function() {
         var albumName = $(this).data('albumName'); // assuming you stored album name in a data attribute
         cordova.plugins.RiyaAlbumLoader.loadPicturesInAlbum(albumName, function(pictures) {
             // pictures is a JSON array containing file paths of pictures in the album
