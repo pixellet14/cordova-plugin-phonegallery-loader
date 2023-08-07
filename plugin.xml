@@ -7,8 +7,12 @@
     <description>Cordova Plugin To Load Albums</description>
 
     <js-module src="www/RiyaAlbumLoader.js" name="RiyaAlbumLoader">
-        <clobbers target="RiyaAlbumLoader" />
+    <clobbers target="cordova.plugins.riyaAlbumLoader" />
     </js-module>
+    
+
+    <!-- Add other platforms as needed -->
+
 
     <platform name="android">
         <config-file parent="/*" target="res/xml/config.xml">
