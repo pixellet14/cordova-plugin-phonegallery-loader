@@ -12,7 +12,7 @@ public class RiyaAlbumLoader extends CordovaPlugin {
     public boolean execute(String action, JSONArray data, CallbackContext callbackContext) throws JSONException {
 
         if (action.equals("getAlbums")) {
-            String[] folders = {"Camera", "WhatsApp", "Instagram", "Facebook", "DCIM"};
+            String[] folders = {"Camera", "WhatsApp", "Instagram", "Facebook", "DCIM", "Pictures"};
 
             JSONArray albums = new JSONArray();
             
