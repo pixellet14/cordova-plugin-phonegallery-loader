@@ -1,23 +1,27 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <plugin xmlns="http://apache.org/cordova/ns/plugins/1.0"
-    id="cordova-plugin-picture-loader"
-    version="0.0.1">
-    <name>PictureLoader</name>
-    <description>A Cordova plugin to load pictures from albums</description>
-    <license>MIT</license>
-    <keywords>cordova,picture,loader</keywords>
+        id="cordova-plugin-picture-loader"
+        version="1.0.0">
 
-    <!-- android platform -->
+    <name>Riya Album Loader</name>
+    <description>Cordova Plugin To Load Albums</description>
+
+    <js-module src="www/RiyaAlbumLoader.js" name="RiyaAlbumLoader">
+        <clobbers target="RiyaAlbumLoader" />
+    </js-module>
+
     <platform name="android">
-        <config-file target="res/xml/config.xml" parent="/*">
+        <config-file parent="/*" target="res/xml/config.xml">
             <feature name="RiyaAlbumLoader">
                 <param name="android-package" value="com.example.RiyaAlbumLoader"/>
             </feature>
         </config-file>
 
+        <config-file parent="/*" target="AndroidManifest.xml">
+            <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+        </config-file>
+
         <source-file src="src/android/RiyaAlbumLoader.java" target-dir="src/com/example" />
-        <js-module name="RiyaAlbumLoader" src="www/RiyaAlbumLoader.js">
-            <clobbers target="cordova.plugins.RiyaAlbumLoader" />
-        </js-module>
     </platform>
+
 </plugin>
