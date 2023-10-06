@@ -3,7 +3,7 @@
 This my own sample code, you can use your own. it is just to display how the function could be called and how the plugin works
 
 Installation
-cordova plugin add https://github.com/yourusername/cordova-plugin-phonegallery-display.git
+cordova plugin add https://github.com/pixellet14/cordova-plugin-phonegallery-display.git
 
 
 function gallerySearch() {
