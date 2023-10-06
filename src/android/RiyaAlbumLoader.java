@@ -35,8 +35,8 @@ public class RiyaAlbumLoader extends CordovaPlugin {
         Uri uri = MediaStore.Images.Media.EXTERNAL_CONTENT_URI;
         String[] projection = { MediaStore.Images.Media.BUCKET_DISPLAY_NAME, MediaStore.Images.Media.DATA };
         
-        Cursor cursor = this.cordova.getActivity().getContentResolver().query(uri, projection, null, null, MediaStore.Images.Media.DATE_MODIFIED + " DESC");
-        
+        Cursor cursor = this.cordova.getActivity().getContentResolver().query(uri, projection, null, null, MediaStore.Images.Media.BUCKET_DISPLAY_NAME + " ASC");
+       
         JSONArray result = new JSONArray();
 
         // Use a HashSet to keep track of the albums we've already processed
