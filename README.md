@@ -1,10 +1,7 @@
 This my own sample code, you can use your own. it is just to display how the function could be called and how the plugin works
 
 function gallerySearch() {
-    $("#galleryoption").offcanvas('show');
-    hidequickcontext();
-     $(".optioncontext").hide();
-    
+  
     // Load the albums
     cordova.plugins.RiyaAlbumLoader.loadAlbums(function(albums) {
               // Process the returned albums
