@@ -6,7 +6,7 @@
   "scripts": {},
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/pixellet14/cordova-plugin-picture-loader.git"
+    "url": "git+https://github.com/pixellet14/cordova-plugin-phonegallery-display.git"
   },
   "author": {
     "name": "Riya Singh",
@@ -15,9 +15,9 @@
   },
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/pixellet14/cordova-plugin-picture-loader/issues"
+    "url": "https://github.com/pixellet14/cordova-plugin-phonegallery-displayissues"
   },
-  "homepage": "https://github.com/pixellet14/cordova-plugin-picture-loader#readme",
+  "homepage": "https://github.com/pixellet14/cordova-plugin-phonegallery-display#readme",
   "devDependencies": {},
   "dependencies": {}
 }
