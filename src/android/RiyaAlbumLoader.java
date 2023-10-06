@@ -28,30 +28,43 @@ public class RiyaAlbumLoader extends CordovaPlugin {
         return false;
     }
 
-    private void loadAlbums(CallbackContext callbackContext) {
-        Uri uri = MediaStore.Images.Media.EXTERNAL_CONTENT_URI;
-        String[] projection = { MediaStore.Images.Media.BUCKET_DISPLAY_NAME, MediaStore.Images.Media.DATA };
-        Cursor cursor = this.cordova.getActivity().getContentResolver().query(uri, projection, "1) GROUP BY 1 (", null, null);
+   private void loadAlbums(CallbackContext callbackContext) {
+    Uri uri = MediaStore.Images.Media.EXTERNAL_CONTENT_URI;
+    String[] projection = { MediaStore.Images.Media.BUCKET_DISPLAY_NAME, MediaStore.Images.Media.DATA };
 
-        JSONArray result = new JSONArray();
+    // The DISTINCT query to get unique album names and a sample thumbnail from each
+    Cursor cursor = this.cordova.getActivity().getContentResolver().query(uri, projection, null, null, MediaStore.Images.Media.DATE_MODIFIED + " DESC");
 
-        int albumNameColumn = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.BUCKET_DISPLAY_NAME);
-        int albumPathColumn = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
+    JSONArray result = new JSONArray();
 
-        while (cursor.moveToNext()) {
+    // Use a HashSet to keep track of the albums we've already processed
+    HashSet<String> albumNames = new HashSet<>();
+
+    int albumNameColumn = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.BUCKET_DISPLAY_NAME);
+    int albumPathColumn = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
+
+    while (cursor.moveToNext()) {
+        String albumName = cursor.getString(albumNameColumn);
+
+        // Check if we've already processed this album
+        if (!albumNames.contains(albumName)) {
+            albumNames.add(albumName);
+
             JSONObject album = new JSONObject();
             try {
-                album.put("name", cursor.getString(albumNameColumn));
+                album.put("name", albumName);
                 album.put("thumbnailPath", cursor.getString(albumPathColumn));
                 result.put(album);
             } catch (JSONException e) {
                 e.printStackTrace();
             }
         }
-
-        cursor.close();
-        callbackContext.success(result);
     }
+
+    cursor.close();
+    callbackContext.success(result);
+}
+
 
     private void loadPicturesInAlbum(String albumName, CallbackContext callbackContext) {
         Uri uri = MediaStore.Images.Media.EXTERNAL_CONTENT_URI;
