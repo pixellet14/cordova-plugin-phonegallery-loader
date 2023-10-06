@@ -7,10 +7,9 @@ import android.provider.MediaStore;
 import android.database.Cursor;
 import android.net.Uri;
 import org.json.JSONObject;
+import java.util.HashSet;
 
 public class RiyaAlbumLoader extends CordovaPlugin {
-
-    private static final String[] TARGET_FOLDERS = {"camera", "whatsapp", "instagram", "facebook", "DCIM"};
 
     @Override
     public boolean execute(String action, JSONArray data, CallbackContext callbackContext) throws JSONException {
@@ -28,43 +27,41 @@ public class RiyaAlbumLoader extends CordovaPlugin {
         return false;
     }
 
-   private void loadAlbums(CallbackContext callbackContext) {
-    Uri uri = MediaStore.Images.Media.EXTERNAL_CONTENT_URI;
-    String[] projection = { MediaStore.Images.Media.BUCKET_DISPLAY_NAME, MediaStore.Images.Media.DATA };
+    private void loadAlbums(CallbackContext callbackContext) {
+        Uri uri = MediaStore.Images.Media.EXTERNAL_CONTENT_URI;
+        String[] projection = { MediaStore.Images.Media.BUCKET_DISPLAY_NAME, MediaStore.Images.Media.DATA };
+        
+        Cursor cursor = this.cordova.getActivity().getContentResolver().query(uri, projection, null, null, MediaStore.Images.Media.DATE_MODIFIED + " DESC");
+        
+        JSONArray result = new JSONArray();
 
-    // The DISTINCT query to get unique album names and a sample thumbnail from each
-    Cursor cursor = this.cordova.getActivity().getContentResolver().query(uri, projection, null, null, MediaStore.Images.Media.DATE_MODIFIED + " DESC");
+        // Use a HashSet to keep track of the albums we've already processed
+        HashSet<String> albumNames = new HashSet<>();
 
-    JSONArray result = new JSONArray();
+        int albumNameColumn = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.BUCKET_DISPLAY_NAME);
+        int albumPathColumn = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
 
-    // Use a HashSet to keep track of the albums we've already processed
-    HashSet<String> albumNames = new HashSet<>();
+        while (cursor.moveToNext()) {
+            String albumName = cursor.getString(albumNameColumn);
 
-    int albumNameColumn = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.BUCKET_DISPLAY_NAME);
-    int albumPathColumn = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
+            // Check if we've already processed this album
+            if (!albumNames.contains(albumName)) {
+                albumNames.add(albumName);
 
-    while (cursor.moveToNext()) {
-        String albumName = cursor.getString(albumNameColumn);
-
-        // Check if we've already processed this album
-        if (!albumNames.contains(albumName)) {
-            albumNames.add(albumName);
-
-            JSONObject album = new JSONObject();
-            try {
-                album.put("name", albumName);
-                album.put("thumbnailPath", cursor.getString(albumPathColumn));
-                result.put(album);
-            } catch (JSONException e) {
-                e.printStackTrace();
+                JSONObject album = new JSONObject();
+                try {
+                    album.put("name", albumName);
+                    album.put("thumbnailPath", cursor.getString(albumPathColumn));
+                    result.put(album);
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
             }
         }
+
+        cursor.close();
+        callbackContext.success(result);
     }
-
-    cursor.close();
-    callbackContext.success(result);
-}
-
 
     private void loadPicturesInAlbum(String albumName, CallbackContext callbackContext) {
         Uri uri = MediaStore.Images.Media.EXTERNAL_CONTENT_URI;
@@ -84,4 +81,4 @@ public class RiyaAlbumLoader extends CordovaPlugin {
         cursor.close();
         callbackContext.success(result);
     }
-} 
+}
