@@ -64,6 +64,7 @@ public class RiyaAlbumLoader extends CordovaPlugin {
     }
 
    private void loadPicturesInAlbum(String albumName, int startIndex, int count, CallbackContext callbackContext) {
+     Log.d("RiyaAlbumLoader", "Fetching pictures for album: " + albumName + ", starting at index: " + startIndex + ", count: " + count);
     Uri uri = MediaStore.Images.Media.EXTERNAL_CONTENT_URI;
     String[] projection = { MediaStore.Images.Media.DATA, MediaStore.Images.Media.SIZE };
     String selection = MediaStore.Images.Media.BUCKET_DISPLAY_NAME + "=?";
@@ -84,6 +85,7 @@ public class RiyaAlbumLoader extends CordovaPlugin {
     }
 
     cursor.close();
+      Log.d("RiyaAlbumLoader", "Returning " + result.length() + " pictures.");
     callbackContext.success(result);
 }
 
