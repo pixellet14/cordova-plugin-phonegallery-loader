@@ -13,7 +13,7 @@ function gallerySearch() {
       }
 
 function displayAlbums(albums) {
-    $("#gifcontent1").empty();
+    
     albums.forEach(function(album) {
         let div = $("<div/>").addClass("gifcubes").text(album.name);
         let img = $("<img/>").attr("src", album.thumbnailPath).addClass("album-thumbnail");
@@ -22,7 +22,7 @@ function displayAlbums(albums) {
             // Load pictures of the clicked album
             loadPicturesFromAlbum(album.name);
         });
-        $("#gifcontent1").append(div);
+       document.getElementById("gifcontent1").append(div);
     });
 }
 
