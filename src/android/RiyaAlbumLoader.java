@@ -85,3 +85,5 @@ public class RiyaAlbumLoader extends CordovaPlugin {
     cursor.close();
     callbackContext.success(result);
 }
+
+}
