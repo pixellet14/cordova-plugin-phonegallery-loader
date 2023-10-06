@@ -28,30 +28,44 @@ public class RiyaAlbumLoader extends CordovaPlugin {
         return false;
     }
 
-    private void loadAlbums(CallbackContext callbackContext) {
-        // Logic to find folders containing images.
+   private void loadAlbums(CallbackContext callbackContext) {
+    Uri uri = MediaStore.Images.Media.EXTERNAL_CONTENT_URI;
+    String[] projection = { MediaStore.Images.Media.BUCKET_DISPLAY_NAME, MediaStore.Images.Media.DATA };
+    Cursor cursor = this.cordova.getActivity().getContentResolver().query(uri, projection, "1) GROUP BY 1 (", null, null);
+
+    JSONArray result = new JSONArray();
+
+    int albumNameColumn = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.BUCKET_DISPLAY_NAME);
+    int albumPathColumn = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
+
+    while (cursor.moveToNext()) {
+        JSONObject album = new JSONObject();
+        album.put("name", cursor.getString(albumNameColumn));
+        album.put("thumbnailPath", cursor.getString(albumPathColumn));
+        result.put(album);
     }
 
-    private void loadPicturesInAlbum(String albumName, CallbackContext callbackContext) {
-        try {
-            File picDir = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES), albumName);
-
-            if (picDir.exists() && picDir.isDirectory()) {
-                ArrayList<String> pictures = new ArrayList<String>();
-                File[] allContents = picDir.listFiles();
-                for (File file : allContents) {
-                    if (file.isFile() && (file.getName().endsWith(".jpg") || file.getName().endsWith(".png"))) {
-                        pictures.add(file.getAbsolutePath());
-                    }
-                }
-
-                JSONArray result = new JSONArray(pictures);
-                callbackContext.success(result);
-            } else {
-                callbackContext.error("Album does not exist or is not a directory.");
-            }
-        } catch (Exception e) {
-            callbackContext.error("Error loading pictures: " + e.getMessage());
-        }
-    }
+    cursor.close();
+    callbackContext.success(result);
 }
+
+
+   private void loadPicturesInAlbum(String albumName, CallbackContext callbackContext) {
+    Uri uri = MediaStore.Images.Media.EXTERNAL_CONTENT_URI;
+    String[] projection = { MediaStore.Images.Media.DATA };
+    String selection = MediaStore.Images.Media.BUCKET_DISPLAY_NAME + "=?";
+    String[] selectionArgs = { albumName };
+
+    Cursor cursor = this.cordova.getActivity().getContentResolver().query(uri, projection, selection, selectionArgs, null);
+    JSONArray result = new JSONArray();
+
+    int imagePathColumn = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
+
+    while (cursor.moveToNext()) {
+        result.put(cursor.getString(imagePathColumn));
+    }
+
+    cursor.close();
+    callbackContext.success(result);
+}
+
