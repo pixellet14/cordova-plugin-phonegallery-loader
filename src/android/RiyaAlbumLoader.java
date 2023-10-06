@@ -10,8 +10,10 @@ import org.json.JSONObject;
 import java.util.HashSet;
 import android.util.Log;
 
-
 public class RiyaAlbumLoader extends CordovaPlugin {
+
+    private static final int DEFAULT_START_INDEX = 0;
+    private static final int DEFAULT_COUNT = 25;  // Default batch size
 
     @Override
     public boolean execute(String action, JSONArray data, CallbackContext callbackContext) throws JSONException {
@@ -21,7 +23,7 @@ public class RiyaAlbumLoader extends CordovaPlugin {
         } else if (action.equals("loadPicturesInAlbum")) {
             if(data != null && data.length() > 0){
                 String albumName = data.getString(0);
-                this.loadPicturesInAlbum(albumName, callbackContext);
+                this.loadPicturesInAlbum(albumName, DEFAULT_START_INDEX, DEFAULT_COUNT, callbackContext);
                 return true;
             }
         }
