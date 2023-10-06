@@ -63,13 +63,14 @@ public class RiyaAlbumLoader extends CordovaPlugin {
         callbackContext.success(result);
     }
 
-   private void loadPicturesInAlbum(String albumName, CallbackContext callbackContext) {
+   private void loadPicturesInAlbum(String albumName, int startIndex, int count, CallbackContext callbackContext) {
     Uri uri = MediaStore.Images.Media.EXTERNAL_CONTENT_URI;
     String[] projection = { MediaStore.Images.Media.DATA, MediaStore.Images.Media.SIZE };
     String selection = MediaStore.Images.Media.BUCKET_DISPLAY_NAME + "=?";
     String[] selectionArgs = { albumName };
+    String sortOrder = MediaStore.Images.Media.DATE_MODIFIED + " DESC LIMIT " + count + " OFFSET " + startIndex;
 
-    Cursor cursor = this.cordova.getActivity().getContentResolver().query(uri, projection, selection, selectionArgs, null);
+    Cursor cursor = this.cordova.getActivity().getContentResolver().query(uri, projection, selection, selectionArgs, sortOrder);
     JSONArray result = new JSONArray();
 
     int imagePathColumn = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
@@ -85,5 +86,6 @@ public class RiyaAlbumLoader extends CordovaPlugin {
     cursor.close();
     callbackContext.success(result);
 }
+
 
 }
