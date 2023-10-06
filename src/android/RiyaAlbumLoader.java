@@ -63,22 +63,25 @@ public class RiyaAlbumLoader extends CordovaPlugin {
         callbackContext.success(result);
     }
 
-    private void loadPicturesInAlbum(String albumName, CallbackContext callbackContext) {
-        Uri uri = MediaStore.Images.Media.EXTERNAL_CONTENT_URI;
-        String[] projection = { MediaStore.Images.Media.DATA };
-        String selection = MediaStore.Images.Media.BUCKET_DISPLAY_NAME + "=?";
-        String[] selectionArgs = { albumName };
+   private void loadPicturesInAlbum(String albumName, CallbackContext callbackContext) {
+    Uri uri = MediaStore.Images.Media.EXTERNAL_CONTENT_URI;
+    String[] projection = { MediaStore.Images.Media.DATA, MediaStore.Images.Media.SIZE };
+    String selection = MediaStore.Images.Media.BUCKET_DISPLAY_NAME + "=?";
+    String[] selectionArgs = { albumName };
 
-        Cursor cursor = this.cordova.getActivity().getContentResolver().query(uri, projection, selection, selectionArgs, null);
-        JSONArray result = new JSONArray();
+    Cursor cursor = this.cordova.getActivity().getContentResolver().query(uri, projection, selection, selectionArgs, null);
+    JSONArray result = new JSONArray();
 
-        int imagePathColumn = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
+    int imagePathColumn = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
+    int imageSizeColumn = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.SIZE);
 
-        while (cursor.moveToNext()) {
+    while (cursor.moveToNext()) {
+        // Check if image size is greater than 0
+        if (cursor.getInt(imageSizeColumn) > 0) {
             result.put(cursor.getString(imagePathColumn));
         }
-
-        cursor.close();
-        callbackContext.success(result);
     }
+
+    cursor.close();
+    callbackContext.success(result);
 }
