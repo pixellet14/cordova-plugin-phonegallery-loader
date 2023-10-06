@@ -1,24 +1,78 @@
-This is an experimental plugin. Use it at your own risk. It loads list of albums in your phone and once the album items are clicked it can be used to display pictures in them. Look at a sample code below
+This my own sample code, you can use your own. it is just to display how the function could be called and how the plugin works
 
-        document.addEventListener('deviceready', function() {
-            // To load the albums
-            cordova.plugins.RiyaAlbumLoader.loadAlbums(function(albums) {
-                // albums is a JSON array containing album names
-                // You can process it to create your list
-            }, function(error) {
-                // Handle error
-            });
-            // Attach a click event to each album item. When an album is clicked,
-
+function gallerySearch() {
+    $("#galleryoption").offcanvas('show');
+    hidequickcontext();
+    $(".optioncontext").hide();
     
-        // load the pictures in the album
-        $(document).on('click', '.album-item', function() {
-                var albumName = $(this).data('albumName'); // assuming you stored album name in a data attribute
-                cordova.plugins.RiyaAlbumLoader.loadPicturesInAlbum(albumName, function(pictures) {
-                    // pictures is a JSON array containing file paths of pictures in the album
-                    // You can process it to create your grid
-                }, function(error) {
-                    // Handle error
-                });
-            });
+    // Load the albums
+    cordova.plugins.RiyaAlbumLoader.loadAlbums(function(albums) {
+        // Process the returned albums
+        displayAlbums(albums);
+    }, function(error) {
+        // Handle any errors
+        console.error("Error loading albums:", error);
+    });
+}
+
+function displayAlbums(albums) {
+    $("#gifcontent1").empty();
+    albums.forEach(function(album) {
+        let div = $("<div/>").addClass("gifcubes").text(album.name);
+        let img = $("<img/>").attr("src", album.thumbnailPath).addClass("album-thumbnail");
+        div.prepend(img); // Display album thumbnail
+        div.click(function() {
+            // Load pictures of the clicked album
+            loadPicturesFromAlbum(album.name);
         });
+        $("#gifcontent1").append(div);
+    });
+}
+
+function loadPicturesFromAlbum(albumName) {
+    cordova.plugins.RiyaAlbumLoader.loadPicturesInAlbum(albumName, function(pictures) {
+        displayPictures(pictures);
+    }, function(error) {
+        // Handle any errors
+        console.error("Error loading pictures:", error);
+    });
+}
+
+function displayPictures(pictures) {
+    $("#gifcontent1").empty();
+    let selectedPictures = []; // To keep track of selected pictures
+
+    pictures.forEach(function(picturePath) {
+        // Convert the native path into a usable URL for the WebView
+        window.resolveLocalFileSystemURL(picturePath, function(fileEntry) {
+            fileEntry.file(function(file) {
+                let reader = new FileReader();
+                reader.onloadend = function() {
+                    // This blobURL can be used directly as the src in the img tag
+                    let blobURL = this.result;
+
+                    let div = $("<div/>").addClass("gifcubes");
+                    let img = $("<img/>").attr("src", blobURL).addClass("gifCubeImg").attr("data-long-press-delay", "1000");
+                    let selectionIndicator = $("<div/>").addClass("selection-indicator").css("display", "none");
+
+                    div.append(img);
+                    div.append(selectionIndicator);
+                    div.click(function() {
+                        if (selectedPictures.length < 5) { // Allow selection of up to 5 pictures
+                            selectionIndicator.show();
+                            selectedPictures.push(picturePath);
+                        } else {
+                            showToastCustom('You can select only up to 5 pictures at a time.');
+                        }
+                    });
+                    $("#gifcontent1").append(div);
+                };
+                // Convert the file into a blob URL
+                reader.readAsDataURL(file);
+            });
+        }, function(error) {
+            console.error("Error resolving file path:", error);
+        });
+    });
+}
+
