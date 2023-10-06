@@ -8,6 +8,8 @@ import android.database.Cursor;
 import android.net.Uri;
 import org.json.JSONObject;
 import java.util.HashSet;
+import android.util.Log;
+
 
 public class RiyaAlbumLoader extends CordovaPlugin {
 
