@@ -36,7 +36,7 @@ function loadPicturesFromAlbum(albumName) {
 }
 
 function displayPictures(pictures) {
-        $("#gifcontent1").empty();
+         document.getElementById("gifcontent1").empty();
         let selectedPictures = []; // To keep track of selected pictures
     
         pictures.forEach(function(picturePath) {
