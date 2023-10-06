@@ -1,3 +1,5 @@
+<h2>A Simple plugin to display saved albums from your phone and even the pictures in them</h2>
+
 This my own sample code, you can use your own. it is just to display how the function could be called and how the plugin works
 
 function gallerySearch() {
@@ -12,9 +14,8 @@ function gallerySearch() {
           });
       }
 
-function displayAlbums(albums) {
-    
-    albums.forEach(function(album) {
+function displayAlbums(albums) {    
+  albums.forEach(function(album) {
         let div = $("<div/>").addClass("gifcubes").text(album.name);
         let img = $("<img/>").attr("src", album.thumbnailPath).addClass("album-thumbnail");
         div.prepend(img); // Display album thumbnail
