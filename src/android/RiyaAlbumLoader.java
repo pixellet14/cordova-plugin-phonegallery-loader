@@ -75,7 +75,7 @@ public class RiyaAlbumLoader extends CordovaPlugin {
         String[] projection = { MediaStore.Images.Media.DATA, MediaStore.Images.Media.SIZE };
         String selection = MediaStore.Images.Media.BUCKET_DISPLAY_NAME + "=?";
         String[] selectionArgs = { albumName };
-        String sortOrder = MediaStore.Images.Media.DATE_MODIFIED + " DESC LIMIT " + startIndex + "," + count; // Added the proper LIMIT clause
+        String sortOrder = MediaStore.Images.Media.DATE_MODIFIED + " DESC LIMIT " + count + " OFFSET " + startIndex;
     
         Cursor cursor = this.cordova.getActivity().getContentResolver().query(uri, projection, selection, selectionArgs, sortOrder);
         JSONArray result = new JSONArray();
