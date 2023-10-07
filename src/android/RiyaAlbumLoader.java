@@ -68,42 +68,30 @@ public class RiyaAlbumLoader extends CordovaPlugin {
     }
 
     private void loadPicturesInAlbum(String albumName, int startIndex, int count, CallbackContext callbackContext) {
-        Log.d("RiyaAlbumLoader", "Fetching pictures for album: " + albumName + ", starting at index: " + startIndex + ", count: " + count);
-        
-        Uri uri = MediaStore.Images.Media.EXTERNAL_CONTENT_URI;
-        String[] projection = { MediaStore.Images.Media.DATA, MediaStore.Images.Media.SIZE };
-        String selection = MediaStore.Images.Media.BUCKET_DISPLAY_NAME + "=?";
-        String[] selectionArgs = { albumName };
-        String sortOrder = MediaStore.Images.Media.DATE_MODIFIED + " DESC"; // Just order it by date for now
+    Log.d("RiyaAlbumLoader", "Fetching pictures for album: " + albumName + ", starting at index: " + startIndex + ", count: " + count);
     
-        Cursor cursor = this.cordova.getActivity().getContentResolver().query(uri, projection, selection, selectionArgs, sortOrder);
-        JSONArray result = new JSONArray();
-
-        int imagePathColumn = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
-        int imageSizeColumn = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.SIZE);
-
-        int counter = 0;
-
-        while (cursor.moveToNext()) {
-            if(counter < startIndex) {
-                counter++;
-                continue; // Skip the early images
-            }
+    Uri uri = MediaStore.Images.Media.EXTERNAL_CONTENT_URI;
+    String[] projection = { MediaStore.Images.Media.DATA, MediaStore.Images.Media.SIZE };
+    String selection = MediaStore.Images.Media.BUCKET_DISPLAY_NAME + "=?";
+    String[] selectionArgs = { albumName };
+    String sortOrder = MediaStore.Images.Media._ID + " ASC LIMIT " + startIndex + ", " + count;
     
-            if(counter >= (startIndex + count)) {
-                break; // Stop after reaching the count
-            }
+    Cursor cursor = this.cordova.getActivity().getContentResolver().query(uri, projection, selection, selectionArgs, sortOrder);
+    JSONArray result = new JSONArray();
 
-            // Check if image size is greater than 0
-            if (cursor.getInt(imageSizeColumn) > 0) {
-                result.put(cursor.getString(imagePathColumn));
-            }
+    int imagePathColumn = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
+    int imageSizeColumn = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.SIZE);
 
-            counter++;
+    while (cursor.moveToNext()) {
+        // Check if image size is greater than 0
+        if (cursor.getInt(imageSizeColumn) > 0) {
+            result.put(cursor.getString(imagePathColumn));
         }
-
-        cursor.close();
-        Log.d("RiyaAlbumLoader", "Returning " + result.length() + " pictures.");
-        callbackContext.success(result);
     }
+
+    cursor.close();
+    Log.d("RiyaAlbumLoader", "Returning " + result.length() + " pictures.");
+    callbackContext.success(result);
+}
+
 }
