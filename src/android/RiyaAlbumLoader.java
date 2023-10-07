@@ -31,42 +31,6 @@ public class RiyaAlbumLoader extends CordovaPlugin {
         return false;
     }
 
-    private void loadAlbums(CallbackContext callbackContext) {
-        Uri uri = MediaStore.Images.Media.EXTERNAL_CONTENT_URI;
-        String[] projection = { MediaStore.Images.Media.BUCKET_DISPLAY_NAME, MediaStore.Images.Media.DATA };
-        
-        Cursor cursor = this.cordova.getActivity().getContentResolver().query(uri, projection, null, null, MediaStore.Images.Media.BUCKET_DISPLAY_NAME + " ASC");
-       
-        JSONArray result = new JSONArray();
-
-        // Use a HashSet to keep track of the albums we've already processed
-        HashSet<String> albumNames = new HashSet<>();
-
-        int albumNameColumn = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.BUCKET_DISPLAY_NAME);
-        int albumPathColumn = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
-
-        while (cursor.moveToNext()) {
-            String albumName = cursor.getString(albumNameColumn);
-
-            // Check if we've already processed this album
-            if (!albumNames.contains(albumName)) {
-                albumNames.add(albumName);
-
-                JSONObject album = new JSONObject();
-                try {
-                    album.put("name", albumName);
-                    album.put("thumbnailPath", cursor.getString(albumPathColumn));
-                    result.put(album);
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-            }
-        }
-
-        cursor.close();
-        callbackContext.success(result);
-    }
-
     private void loadPicturesInAlbum(String albumName, int startIndex, int count, CallbackContext callbackContext) {
     Log.d("RiyaAlbumLoader", "Fetching pictures for album: " + albumName + ", starting at index: " + startIndex + ", count: " + count);
     
@@ -74,7 +38,7 @@ public class RiyaAlbumLoader extends CordovaPlugin {
     String[] projection = { MediaStore.Images.Media.DATA, MediaStore.Images.Media.SIZE };
     String selection = MediaStore.Images.Media.BUCKET_DISPLAY_NAME + "=?";
     String[] selectionArgs = { albumName };
-    String sortOrder = MediaStore.Images.Media._ID + " ASC LIMIT " + startIndex + ", " + count;
+    String sortOrder = MediaStore.Images.Media._ID + " ASC";
     
     Cursor cursor = this.cordova.getActivity().getContentResolver().query(uri, projection, selection, selectionArgs, sortOrder);
     JSONArray result = new JSONArray();
@@ -82,16 +46,22 @@ public class RiyaAlbumLoader extends CordovaPlugin {
     int imagePathColumn = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
     int imageSizeColumn = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.SIZE);
 
-    while (cursor.moveToNext()) {
-        // Check if image size is greater than 0
-        if (cursor.getInt(imageSizeColumn) > 0) {
-            result.put(cursor.getString(imagePathColumn));
-        }
+    // move the cursor to the start index
+    if (cursor.move(startIndex)) {
+        int i = 0;  // counter for the number of images fetched
+        do {
+            // Check if image size is greater than 0
+            if (cursor.getInt(imageSizeColumn) > 0) {
+                result.put(cursor.getString(imagePathColumn));
+                i++;
+            }
+        } while (cursor.moveToNext() && i < count);
     }
 
     cursor.close();
     Log.d("RiyaAlbumLoader", "Returning " + result.length() + " pictures.");
     callbackContext.success(result);
 }
+
 
 }
