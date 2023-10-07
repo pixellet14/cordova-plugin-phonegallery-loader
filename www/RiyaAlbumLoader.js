@@ -1,12 +1,9 @@
 var exec = require('cordova/exec');
 
-var RiyaAlbumLoader = {
-    loadAlbums: function(successCallback, errorCallback) {
-        exec(successCallback, errorCallback, "RiyaAlbumLoader", "loadAlbums", []);
-    },
-    loadPicturesInAlbum: function(albumName, startIndex, count, successCallback, errorCallback) {
-        exec(successCallback, errorCallback, "RiyaAlbumLoader", "loadPicturesInAlbum", [albumName, startIndex, count]);
-    }
+exports.loadAlbums = function(success, error) {
+    exec(success, error, 'RiyaAlbumLoader', 'loadAlbums', []);
 };
 
-module.exports = RiyaAlbumLoader;
+exports.loadPicturesInAlbum = function(albumName, success, error) {
+    exec(success, error, 'RiyaAlbumLoader', 'loadPicturesInAlbum', [albumName]);
+};
