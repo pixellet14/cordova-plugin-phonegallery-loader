@@ -21,9 +21,11 @@ public class RiyaAlbumLoader extends CordovaPlugin {
             this.loadAlbums(callbackContext);
             return true;
         } else if (action.equals("loadPicturesInAlbum")) {
-            if(data != null && data.length() > 0){
+            if(data != null && data.length() > 2){ // Ensure there are 3 arguments passed
                 String albumName = data.getString(0);
-                this.loadPicturesInAlbum(albumName, DEFAULT_START_INDEX, DEFAULT_COUNT, callbackContext);
+                int startIndex = data.getInt(1);
+                int count = data.getInt(2);
+                this.loadPicturesInAlbum(albumName, startIndex, count, callbackContext);
                 return true;
             }
         }
@@ -67,13 +69,13 @@ public class RiyaAlbumLoader extends CordovaPlugin {
         callbackContext.success(result);
     }
 
-       private void loadPicturesInAlbum(String albumName, int startIndex, int count, CallbackContext callbackContext) {
+    private void loadPicturesInAlbum(String albumName, int startIndex, int count, CallbackContext callbackContext) {
         Log.d("RiyaAlbumLoader", "Fetching pictures for album: " + albumName + ", starting at index: " + startIndex + ", count: " + count);
         Uri uri = MediaStore.Images.Media.EXTERNAL_CONTENT_URI;
         String[] projection = { MediaStore.Images.Media.DATA, MediaStore.Images.Media.SIZE };
         String selection = MediaStore.Images.Media.BUCKET_DISPLAY_NAME + "=?";
         String[] selectionArgs = { albumName };
-        String sortOrder = MediaStore.Images.Media.DATE_MODIFIED + " DESC"; // Just order it by date for now
+        String sortOrder = MediaStore.Images.Media.DATE_MODIFIED + " DESC LIMIT " + startIndex + "," + count; // Added the proper LIMIT clause
     
         Cursor cursor = this.cordova.getActivity().getContentResolver().query(uri, projection, selection, selectionArgs, sortOrder);
         JSONArray result = new JSONArray();
@@ -81,18 +83,10 @@ public class RiyaAlbumLoader extends CordovaPlugin {
         int imagePathColumn = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
         int imageSizeColumn = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.SIZE);
     
-        int endIndex = startIndex + count;
-        int currentIndex = 0;
         while (cursor.moveToNext()) {
-            if (currentIndex >= startIndex) {
-                // Check if image size is greater than 0
-                if (cursor.getInt(imageSizeColumn) > 0) {
-                    result.put(cursor.getString(imagePathColumn));
-                }
-            }
-            currentIndex++;
-            if (currentIndex >= endIndex) {
-                break;
+            // Check if image size is greater than 0
+            if (cursor.getInt(imageSizeColumn) > 0) {
+                result.put(cursor.getString(imagePathColumn));
             }
         }
     
@@ -100,7 +94,4 @@ public class RiyaAlbumLoader extends CordovaPlugin {
         Log.d("RiyaAlbumLoader", "Returning " + result.length() + " pictures.");
         callbackContext.success(result);
     }
-
-
-
 }
