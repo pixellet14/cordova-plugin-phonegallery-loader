@@ -6,17 +6,16 @@ Installation
 cordova plugin add https://github.com/pixellet14/cordova-plugin-phonegallery-display.git
 
 
-function gallerySearch() {
-  
-    // Load the albums
-    cordova.plugins.RiyaAlbumLoader.loadAlbums(function(albums) {
-              // Process the returned albums
-              displayAlbums(albums);
-          }, function(error) {
-              // Handle any errors
-              console.error("Error loading albums:", error);
-          });
-      }
+        function gallerySearch() {
+            // Load the albums
+          cordova.plugins.RiyaAlbumLoader.loadAlbums(function(albums) {
+                    // Process the returned albums
+                displayAlbums(albums);
+            }, function(error) {
+                // Handle any errors
+                console.error("Error loading albums:", error);
+            });
+        }
 
     function displayAlbums(albums) {    
       albums.forEach(function(album) {
