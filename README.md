@@ -78,3 +78,5 @@ function gallerySearch() {
             });
         }
 
+
+<h5>It is always advisable to use cordova's sqlite plugin in combination to first fetch and store the pictures in the local DB before displaying them inside any element. this plugin has been tested across all the Android devices from version 9 to 13 and it has been found that android 9,10 and 11 apps crash while displaying pictures from the albums having a large volume of pictures. By using DB, you will be able to even display them using pagination / lazy load logics.<h5>
