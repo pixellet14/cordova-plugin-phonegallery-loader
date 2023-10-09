@@ -1,6 +1,8 @@
-<h2>A Simple plugin to display saved albums from your phone and even the pictures in them</h2>
+<h2>Cordova Phone Gallery Display Plugin</h2>
+<p>A simple plugin to display saved albums from your device, along with the images within them.</p>
 
-This my own sample code, you can use your own. it is just to display how the function could be called and how the plugin works
+<h4>Sample Usage</h4>
+This sample demonstrates how the plugin can be called and operated:
 
 <h5>Installation</h5>
 <p></p>cordova plugin add https://github.com/pixellet14/cordova-plugin-phonegallery-display.git
