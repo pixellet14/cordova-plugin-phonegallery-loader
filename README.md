@@ -1,9 +1,6 @@
 <h2>Cordova Phone Gallery Display Plugin</h2>
 <p>A simple plugin to display saved albums from your device, along with the images within them.</p>
 
-<h4>Sample Usage</h4>
-This sample demonstrates how the plugin can be called and operated:
-
 <h5>Installation</h5>
 <p></p>cordova plugin add https://github.com/pixellet14/cordova-plugin-phonegallery-display.git
 
@@ -12,6 +9,10 @@ OR
 Npmjs (NPM Registry)
 
 cordova plugin add cordova-plugin-phonegallery-display</p>
+
+
+<h4>Sample Usage</h4>
+This sample demonstrates how the plugin can be called and operated:
 
 
         function gallerySearch() {
