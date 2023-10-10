@@ -1,6 +1,6 @@
 {
   "name": "cordova-plugin-phonegallery-loader",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "description": "Cordova plugin to load picture albums and their photos from the gallery",
   "main": "RiyaAlbumLoader.js",
   "scripts": {},
