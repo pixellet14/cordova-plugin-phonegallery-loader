@@ -19,6 +19,7 @@ This sample demonstrates how the plugin can be called and operated:
             // Load the albums
           cordova.plugins.RiyaAlbumLoader.loadAlbums(function(albums) {
                     // Process the returned albums
+                    //returns album.name & album.thumbnailPath
                 displayAlbums(albums);
             }, function(error) {
                 // Handle any errors
