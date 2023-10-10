@@ -2,13 +2,13 @@
 <p>A simple plugin to display saved albums from your device, along with the images within them.</p>
 
 <h5>Installation</h5>
-<p></p>cordova plugin add https://github.com/pixellet14/cordova-plugin-picture-loader.git
+<p></p>cordova plugin add https://github.com/pixellet14/cordova-plugin-phonegallery-loader.git
 
 OR 
 
 Npmjs (NPM Registry)
 
-cordova plugin add cordova-plugin-phonegallery-display</p>
+cordova plugin add cordova-plugin-phonegallery-loader</p>
 
 
 <h4>Sample Usage</h4>
