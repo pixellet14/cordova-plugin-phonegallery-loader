@@ -1,12 +1,12 @@
 {
-  "name": "cordova-plugin-phonegallery-display",
+  "name": "cordova-plugin-phonegallery-loader",
   "version": "1.0.3",
   "description": "Cordova plugin to load picture albums and their photos from the gallery",
   "main": "RiyaAlbumLoader.js",
   "scripts": {},
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/pixellet14/cordova-plugin-picture-loader.git"
+    "url": "git+https://github.com/pixellet14/cordova-plugin-phonegallery-loader.git"
   },
   "author": {
     "name": "Riya Singh",
@@ -15,9 +15,9 @@
   },
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/pixellet14/cordova-plugin-picture-loader#issues"
+    "url": "https://github.com/pixellet14/cordova-plugin-phonegallery-loader#issues"
   },
-  "homepage": "https://github.com/pixellet14/cordova-plugin-picture-loader#readme",
+  "homepage": "https://github.com/pixellet14/cordova-plugin-phonegallery-loader/#readme",
   "devDependencies": {},
   "dependencies": {},
   "keywords": [
